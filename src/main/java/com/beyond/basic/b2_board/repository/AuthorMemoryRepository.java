@@ -1,0 +1,66 @@
+package com.beyond.basic.b2_board.repository;
+
+import com.beyond.basic.b2_board.domain.Author;
+import com.beyond.basic.b2_board.dto.AuthorCreateDto;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public class AuthorMemoryRepository {
+
+    private List<Author> authorList = new ArrayList<>();
+    public static Long id = 1L;
+
+    // 회원 가입
+    public void save(Author author) {
+        // 이메일 중복 검증
+        if (this.findByEmail(author.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        }
+        // authorList에 Author 객체 추가
+        this.authorList.add(author);
+        id++;
+    }
+
+    // 목록 조회
+    public List<Author> findAll() {
+        return this.authorList;
+    }
+
+    // 상세 조회 (id로 조회)
+    public Optional<Author> findById(Long id) {
+        Author author = null;
+        for (Author a : this.authorList) {
+            if (a.getId().equals(id)) {
+                author = a;
+            }
+        }
+        return Optional.ofNullable(author);
+    }
+
+    // 이메일로 조회
+    public Optional<Author> findByEmail(String email) {
+        Author author = null;
+        for (Author a : this.authorList) {
+            if (a.getEmail().equals(email)) {
+                author = a;
+            }
+        }
+        return Optional.ofNullable(author);
+    }
+
+    // 계정 삭제 (탈퇴)
+    public void delete(Long id) {
+        // id 값으로 요소의 index 값을 찾아 삭제
+        for (int i = 0; i < this.authorList.size(); i++) {
+            if (this.authorList.get(i).getId() == id) {
+                this.authorList.remove(i);
+                break;
+            }
+        }
+    }
+
+}

@@ -185,8 +185,9 @@ public class HelloController {
     @PostMapping("/axios-json-file-view")
     @ResponseBody
     public String axiosJsonFileViewPost(
-            @RequestPart(value = "hello") Hello hello,
-            @RequestPart(value = "photo") MultipartFile photo) {
+            // json과 file을 함께 처리해야 할 때 RequestPart 일반적으로 활용
+            @RequestPart("hello") Hello hello,
+            @RequestPart("photo") MultipartFile photo) {
         System.out.println(hello);
         System.out.println(photo.getOriginalFilename());
         return "ok";
