@@ -5,7 +5,9 @@ import com.beyond.basic.b2_board.dto.AuthorCreateDto;
 import com.beyond.basic.b2_board.dto.AuthorDetailDto;
 import com.beyond.basic.b2_board.dto.AuthorListDto;
 import com.beyond.basic.b2_board.dto.AuthorUpdatePwDto;
-import com.beyond.basic.b2_board.repository.AuthorJdbcRepository;
+//import com.beyond.basic.b2_board.repository.AuthorJdbcRepository;
+//import com.beyond.basic.b2_board.repository.AuthorMybatisRepository;
+import com.beyond.basic.b2_board.repository.AuthorJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +41,7 @@ public class AuthorService {
 
     // 의존성 주입 방법3. RequiredArgs 어노테이션 사용 -> 반드시 초기화 되어야 하는 필드(final 등)을 대상으로 생성자를 자동 생성
     // 다형성 설계 불가
-    private final AuthorJdbcRepository authorJdbcRepository;
+    private final AuthorJpaRepository authorRepository;
 
     // 회원 가입
     // 객체 조립은 서비스 담당
@@ -52,7 +54,7 @@ public class AuthorService {
 //        Author author = new Author(authorCreateDto.getName(), authorCreateDto.getEmail(), authorCreateDto.getPassword());
         // toEntity 패턴을 통해 Author 객체 조합을 공통화
         Author author = authorCreateDto.authorToEntity();
-        this.authorJdbcRepository.save(author);
+        this.authorRepository.save(author);
     }
 
     // 트랜잭션이 필요 없는 경우, 아래와 같이 명시적으로 제외
@@ -65,28 +67,29 @@ public class AuthorService {
         }
         return dtoList;*/
         // 스트림을 이용한 간결한 코드
-        return authorJdbcRepository.findAll().stream()
+        return authorRepository.findAll().stream()
                 .map(author -> author.listFromDto())
                 .collect(Collectors.toList());
     }
 
     // 상세 조회
+    @Transactional(readOnly = true)
     public AuthorDetailDto findById(Long id) {
-        Author author = authorJdbcRepository.findById(id).orElseThrow(() -> new NoSuchElementException("없는 ID입니다."));
+        Author author = authorRepository.findById(id).orElseThrow(() -> new NoSuchElementException("없는 ID입니다."));
         AuthorDetailDto dto = AuthorDetailDto.fromEntity(author);
         return dto;
     }
 
     // 비밀번호 변경
-    public void updatePw(AuthorUpdatePwDto authorUpdatePwDto) {
+    public void updatePassword(AuthorUpdatePwDto authorUpdatePwDto) {
         // 이메일로 Author 객체 조회
-        Author author = authorJdbcRepository.findByEmail(authorUpdatePwDto.getEmail()).orElseThrow(() -> new NoSuchElementException("해당 이메일은 존재하지 않습니다."));
+        Author author = authorRepository.findByEmail(authorUpdatePwDto.getEmail()).orElseThrow(() -> new NoSuchElementException("해당 이메일은 존재하지 않습니다."));
         author.updatePw(authorUpdatePwDto.getPassword());
     }
 
     // 회원 탈퇴 (삭제)
     public void delete(Long id) {
-        authorJdbcRepository.findById(id).orElseThrow(() -> new NoSuchElementException("없는 사용자입니다."));
-        authorJdbcRepository.delete(id);
+        authorRepository.findById(id).orElseThrow(() -> new NoSuchElementException("없는 사용자입니다."));
+        authorRepository.delete(id);
     }
 }

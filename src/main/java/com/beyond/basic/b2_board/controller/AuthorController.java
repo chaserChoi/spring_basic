@@ -1,12 +1,10 @@
 package com.beyond.basic.b2_board.controller;
 
-import com.beyond.basic.b2_board.domain.Author;
 import com.beyond.basic.b2_board.dto.*;
 import com.beyond.basic.b2_board.service.AuthorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -58,7 +56,7 @@ public class AuthorController {
     // get:조회, post:등록, patch:부분수정, put:대체, delete:삭제
     @PatchMapping("/updatepw")
     public void updatePw(@RequestBody AuthorUpdatePwDto authorUpdatePwDto) {
-        authorService.updatePw(authorUpdatePwDto);
+        authorService.updatePassword(authorUpdatePwDto);
     }
 
     // 회원 탈퇴(삭제) : /author/1
