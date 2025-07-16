@@ -16,10 +16,6 @@ public class AuthorMemoryRepository {
 
     // 회원 가입
     public void save(Author author) {
-        // 이메일 중복 검증
-        if (this.findByEmail(author.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
-        }
         // authorList에 Author 객체 추가
         this.authorList.add(author);
         id++;
