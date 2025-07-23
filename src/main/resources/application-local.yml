@@ -25,7 +25,15 @@ spring:
 #      create : 매번 table을 drop 후 재생성
 #      update : entity 변경사항만 alter를 적용하고 기존 데이터 유지
 #      validate : 실제 DB와의 차이점을 check만 하고 ddl문 실행 X, 콘솔로만 변경사항 출력
-      ddl-auto: update
+      ddl-auto: create
+#      콘솔 창에 ddl, dml 등의 쿼리를 출력하여 보여주는 옵션
+    show-sql: true
+
+jwt:
+  expirationAt: 1000 # 1000분
+  #  인코딩된 문자 32자 이상 필요. (특수문자)
+#  beyondaccesstokensecretkeybeyondaccesstokensecretkeybeyondaccesstokensecretkey
+  secretKeyAt: YmV5b25kYWNjZXNzdG9rZW5zZWNyZXRrZXliZXlvbmRhY2Nlc3N0b2tlbnNlY3JldGtleWJleW9uZGFjY2Vzc3Rva2Vuc2VjcmV0a2V5
 
 logging:
   level:
@@ -35,4 +43,3 @@ logging:
 # mapper 파일(mybatis의 쿼리 파일)의 위치를 명시 & scan. 기본적으로 resource 퐇더는 default
 mybatis:
   mapper-locations: classpath:/mapper/**/*.xml
-

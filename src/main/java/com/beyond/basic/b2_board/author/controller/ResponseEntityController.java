@@ -1,7 +1,7 @@
-package com.beyond.basic.b2_board.controller;
+package com.beyond.basic.b2_board.author.controller;
 
-import com.beyond.basic.b2_board.domain.Author;
-import com.beyond.basic.b2_board.dto.CommonDto;
+import com.beyond.basic.b2_board.author.domain.Author;
+import com.beyond.basic.b2_board.author.dto.CommonDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +31,10 @@ public class ResponseEntityController {
         return new ResponseEntity<>(author, HttpStatus.CREATED);
     }
 
-    // case 3. ResponseEntity 객체를 직접 생성하는 방식 (가장 많이 사용)
     @GetMapping("/custom2")
     public ResponseEntity<?> custom2() {
         Author author = new Author("test", "test@naver.com", "123456789");
         return new ResponseEntity<>(new CommonDto(author, HttpStatus.CREATED.value(), "author is created successfully!"), HttpStatus.CREATED);
+//        return new ResponseEntity<>(new CommonDTO(author, HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase()), HttpStatus.CREATED);
     }
 }
